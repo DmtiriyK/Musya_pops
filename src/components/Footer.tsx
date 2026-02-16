@@ -1,0 +1,80 @@
+'use client';
+
+import { motion } from 'framer-motion';
+import { FaGithub, FaHeart } from 'react-icons/fa';
+
+export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
+  return (
+    <footer className="relative py-12 bg-gradient-to-b from-primary/10 to-background overflow-hidden">
+      {/* Декоративные элементы */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-10 left-10 text-6xl">🐾</div>
+        <div className="absolute top-20 right-20 text-6xl">🐾</div>
+        <div className="absolute bottom-10 left-1/4 text-6xl">🐾</div>
+        <div className="absolute bottom-20 right-1/4 text-6xl">🐾</div>
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="max-w-4xl mx-auto">
+          {/* Верхняя часть */}
+          <div className="text-center mb-8">
+            <motion.div
+              animate={{ rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="text-6xl mb-4 inline-block"
+            >
+              🐱
+            </motion.div>
+            <h3 className="text-3xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent mb-2">
+              Мяу!
+            </h3>
+            <p className="text-foreground/60">
+              Спасибо, что заглянули познакомиться с нашей звездой
+            </p>
+          </div>
+
+          {/* Разделитель */}
+          <div className="h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent mb-8" />
+
+          {/* Нижняя часть */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-foreground/60">
+            <div className="flex items-center gap-2">
+              <span>Сделано с</span>
+              <motion.div
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 1, repeat: Infinity }}
+              >
+                <FaHeart className="text-primary" />
+              </motion.div>
+              <span>для лучшей кошки</span>
+            </div>
+
+            <div className="flex items-center gap-6">
+              <a
+                href="https://github.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 hover:text-primary transition-colors"
+              >
+                <FaGithub />
+                <span>GitHub</span>
+              </a>
+              <span>© {currentYear}</span>
+            </div>
+          </div>
+
+          {/* Дополнительная информация */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="mt-8 text-center text-xs text-foreground/40"
+          >
+            <p>Next.js • TypeScript • Tailwind CSS • Framer Motion</p>
+          </motion.div>
+        </div>
+      </div>
+    </footer>
+  );
+}
