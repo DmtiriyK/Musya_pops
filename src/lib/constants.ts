@@ -15,12 +15,8 @@ export const ANIMATION_DURATIONS = {
   verySlow: 1,
 } as const;
 
-// Пути к звуковым файлам
-export const SOUNDS = {
-  meow: '/sounds/meow.mp3',
-  purr: '/sounds/purr.mp3',
-  click: '/sounds/click.mp3',
-} as const;
+// Звуки — зарезервировано под будущие файлы
+// export const SOUNDS = { meow: '/sounds/meow.mp3', purr: '/sounds/purr.mp3' };
 
 // Информация о кошке
 export const CAT_INFO = {

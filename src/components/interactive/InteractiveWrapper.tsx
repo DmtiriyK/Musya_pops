@@ -1,16 +1,7 @@
 'use client';
 
 import { useInteractive } from './InteractiveProvider';
-import {
-  ScrollingCat,
-  CustomCursor,
-  PawPrints,
-  FloatingElements,
-  RunningMouse,
-  ScrollProgress,
-  ConfettiEffect,
-  CatCompanion,
-} from './index';
+import { ScrollProgress, ScrollingCat } from './index';
 
 export default function InteractiveWrapper() {
   const { isEnabled } = useInteractive();
@@ -20,13 +11,7 @@ export default function InteractiveWrapper() {
   return (
     <>
       <ScrollProgress />
-      <CustomCursor />
-      <PawPrints />
-      <FloatingElements />
       <ScrollingCat />
-      <RunningMouse />
-      <CatCompanion />
-      <ConfettiEffect />
     </>
   );
 }

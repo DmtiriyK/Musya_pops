@@ -1,46 +1,68 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { fadeIn, scaleIn, staggerContainer } from '@/lib/animations';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
+import { useLanguage } from '@/contexts/LanguageContext';
 
-const mockGalleryItems = [
-  { id: '1', src: '/images/gallery/924656c7-13de-4566-bb6a-f4031f016761.jpg', caption: 'Счастливый момент' },
-  { id: '2', src: '/images/gallery/a0df2bf0-f234-49ef-a456-9019bc25eb61.jpg', caption: 'Просто красавчик' },
-  { id: '3', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.16.jpeg', caption: 'Смешная рожица' },
-  { id: '4', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.17 (1).jpeg', caption: 'Влюблённый взгляд' },
-  { id: '5', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.17 (2).jpeg', caption: 'Поцелуйчик' },
-  { id: '6', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.17 (3).jpeg', caption: 'Удивление дня' },
-  { id: '7', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.17 (4).jpeg', caption: 'Игривое настроение' },
-  { id: '8', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.17.jpeg', caption: 'Отдых' },
-  { id: '9', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.18 (1).jpeg', caption: 'Любопытство' },
-  { id: '10', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.18 (2).jpeg', caption: 'Милашка' },
-  { id: '11', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.18 (3).jpeg', caption: 'Вечерний чил' },
-  { id: '12', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.18 (4).jpeg', caption: 'Ловкач' },
-  { id: '13', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.18.jpeg', caption: 'Мечтатель' },
-  { id: '14', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.19.jpeg', caption: 'Хищник' },
-  { id: '15', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.19 (1).jpeg', caption: 'Принц(есса)' },
-  { id: '16', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.19 (2).jpeg', caption: 'Модель' },
-  { id: '17', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.19.jpeg', caption: 'Звезда' },
-  { id: '18', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.21 (1).jpeg', caption: 'Философ' },
-  { id: '19', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.21 (2).jpeg', caption: 'Акробат' },
-  { id: '20', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.21 (3).jpeg', caption: 'Сонечка' },
-  { id: '21', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.21 (4).jpeg', caption: 'Охотник' },
-  { id: '22', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.21.jpeg', caption: 'Красотка' },
-  { id: '23', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.22 (1).jpeg', caption: 'Умница' },
-  { id: '24', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.22 (2).jpeg', caption: 'Шалун' },
-  { id: '25', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.22 (3).jpeg', caption: 'Ангелочек' },
-  { id: '26', src: '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.22 (4).jpeg', caption: 'Любимчик' },
+const gallerySrcs = [
+  '/images/gallery/924656c7-13de-4566-bb6a-f4031f016761.jpg',
+  '/images/gallery/a0df2bf0-f234-49ef-a456-9019bc25eb61.jpg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.16.jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.17 (1).jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.17 (2).jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.17 (3).jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.17 (4).jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.17.jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.18 (1).jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.18 (2).jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.18 (3).jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.18 (4).jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.18.jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.03.19.jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.19 (1).jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.19 (2).jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.19.jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.21 (1).jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.21 (2).jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.21 (3).jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.21 (4).jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.21.jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.22 (1).jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.22 (2).jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.22 (3).jpeg',
+  '/images/gallery/WhatsApp Image 2026-02-16 at 15.05.22 (4).jpeg',
 ];
 
 export default function Gallery() {
+  const { t } = useLanguage();
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
 
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
+
+  const goNext = useCallback(() => {
+    setSelectedImage((prev) => prev !== null ? (prev + 1) % gallerySrcs.length : null);
+  }, []);
+
+  const goPrev = useCallback(() => {
+    setSelectedImage((prev) => prev !== null ? (prev - 1 + gallerySrcs.length) % gallerySrcs.length : null);
+  }, []);
+
+  useEffect(() => {
+    if (selectedImage === null) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') goNext();
+      if (e.key === 'ArrowLeft') goPrev();
+      if (e.key === 'Escape') setSelectedImage(null);
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [selectedImage, goNext, goPrev]);
 
   return (
     <section id="gallery" className="py-20 bg-gradient-to-b from-secondary/10 to-background" ref={ref}>
@@ -51,7 +73,7 @@ export default function Gallery() {
           animate={inView ? "visible" : "hidden"}
           className="text-5xl md:text-6xl font-bold text-center mb-16 bg-gradient-to-r from-secondary to-accent bg-clip-text text-transparent"
         >
-          Галерея моментов
+          {t.gallery.sectionTitle}
         </motion.h2>
 
         <motion.div
@@ -60,57 +82,87 @@ export default function Gallery() {
           animate={inView ? "visible" : "hidden"}
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-7xl mx-auto"
         >
-          {mockGalleryItems.map((item, index) => (
+          {gallerySrcs.map((src, index) => (
             <motion.div
-              key={item.id}
+              key={index}
               variants={scaleIn}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
               onClick={() => setSelectedImage(index)}
               className="relative aspect-square bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl overflow-hidden cursor-pointer group"
             >
-              <img 
-                src={item.src} 
-                alt={item.caption} 
-                className="w-full h-full object-cover transition-transform group-hover:scale-110"
+              <Image
+                src={src}
+                alt={t.gallery.captions[index] ?? ''}
+                fill
+                sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                <p className="text-white font-medium text-sm">{item.caption}</p>
+                <p className="text-white font-medium text-sm">{t.gallery.captions[index]}</p>
               </div>
             </motion.div>
           ))}
         </motion.div>
 
-        {/* Модалка для просмотра (опционально) */}
+        {/* Lightbox */}
+        <AnimatePresence>
         {selectedImage !== null && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={() => setSelectedImage(null)}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           >
             <motion.div
-              initial={{ scale: 0.5 }}
-              animate={{ scale: 1 }}
-              className="relative max-w-4xl w-full aspect-square bg-gradient-to-br from-primary/20 to-secondary/20 rounded-3xl overflow-hidden"
+              initial={{ scale: 0.85, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.85, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-w-4xl w-full rounded-3xl overflow-hidden bg-black"
             >
-              <img 
-                src={mockGalleryItems[selectedImage].src} 
-                alt={mockGalleryItems[selectedImage].caption} 
-                className="w-full h-full object-contain"
-              />
+              <div className="relative w-full aspect-[4/3]">
+                <Image
+                  src={gallerySrcs[selectedImage]}
+                  alt={t.gallery.captions[selectedImage] ?? ''}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 1200px) 100vw, 900px"
+                />
+              </div>
+
+              {/* Стрелки */}
+              <button
+                onClick={(e) => { e.stopPropagation(); goPrev(); }}
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/40 rounded-full text-white font-bold text-xl flex items-center justify-center transition-colors"
+              >
+                ‹
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); goNext(); }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/40 rounded-full text-white font-bold text-xl flex items-center justify-center transition-colors"
+              >
+                ›
+              </button>
+
+              {/* Закрыть */}
               <button
                 onClick={() => setSelectedImage(null)}
-                className="absolute top-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center text-2xl hover:bg-gray-100 transition-colors"
+                className="absolute top-3 right-3 w-9 h-9 bg-white/20 hover:bg-white/40 rounded-full text-white flex items-center justify-center text-lg transition-colors"
               >
                 ×
               </button>
-              <p className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white text-2xl font-medium">
-                {mockGalleryItems[selectedImage].caption}
-              </p>
+
+              {/* Подпись + счётчик */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-6 py-4 flex items-center justify-between">
+                <p className="text-white font-medium">{t.gallery.captions[selectedImage]}</p>
+                <span className="text-white/60 text-sm">{selectedImage + 1} / {gallerySrcs.length}</span>
+              </div>
             </motion.div>
           </motion.div>
         )}
+        </AnimatePresence>
       </div>
     </section>
   );

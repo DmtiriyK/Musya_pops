@@ -2,9 +2,11 @@
 
 import { motion } from 'framer-motion';
 import { fadeIn, slideUp, scaleIn } from '@/lib/animations';
-import { CAT_INFO } from '@/lib/constants';
+import Image from 'next/image';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Hero() {
+  const { t } = useLanguage();
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20">
       {/* Фоновые декоративные элементы */}
@@ -40,7 +42,7 @@ export default function Hero() {
               transition={{ delay: 0.2 }}
               className="text-6xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent"
             >
-              {CAT_INFO.name}
+              {t.cat.name}
             </motion.h1>
             
             <motion.p
@@ -50,7 +52,7 @@ export default function Hero() {
               transition={{ delay: 0.4 }}
               className="text-2xl md:text-3xl text-foreground/80 mb-4"
             >
-              {CAT_INFO.breed}
+              {t.cat.breed}
             </motion.p>
             
             <motion.p
@@ -60,7 +62,7 @@ export default function Hero() {
               transition={{ delay: 0.6 }}
               className="text-lg md:text-xl text-foreground/60 mb-8 max-w-lg"
             >
-              {CAT_INFO.description}
+              {t.cat.description}
             </motion.p>
 
             {/* Характеристики */}
@@ -71,7 +73,7 @@ export default function Hero() {
               transition={{ delay: 0.8 }}
               className="flex flex-wrap gap-3 justify-center md:justify-start"
             >
-              {CAT_INFO.personality.map((trait, index) => (
+              {t.cat.personality.map((trait, index) => (
                 <motion.span
                   key={trait}
                   initial={{ opacity: 0, scale: 0 }}
@@ -96,13 +98,13 @@ export default function Hero() {
                 onClick={() => document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' })}
                 className="px-8 py-4 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-all hover:scale-105"
               >
-                Смотреть фото
+                {t.hero.photoBtn}
               </button>
               <button
                 onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
                 className="px-8 py-4 border-2 border-primary text-primary rounded-full font-medium hover:bg-primary hover:text-white transition-all hover:scale-105"
               >
-                Узнать больше
+                {t.hero.aboutBtn}
               </button>
             </motion.div>
           </motion.div>
@@ -129,31 +131,22 @@ export default function Hero() {
               {/* Изображение кошки */}
               <div className="relative w-full aspect-square max-w-lg mx-auto">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary to-secondary rounded-3xl opacity-20 blur-2xl" />
-                <div className="relative bg-gradient-to-br from-primary/30 to-secondary/30 rounded-3xl p-2 backdrop-blur-sm border-2 border-primary/20 overflow-hidden">
-                  <img
+                <div className="relative bg-gradient-to-br from-primary/30 to-secondary/30 rounded-3xl p-2 backdrop-blur-sm border-2 border-primary/20 overflow-hidden aspect-square">
+                  <Image
                     src="/images/hero/WhatsApp Image 2026-02-16 at 15.05.22.jpeg"
-                    alt={CAT_INFO.name}
-                    className="w-full h-full object-cover rounded-2xl"
+                    alt={t.cat.name}
+                    fill
+                    sizes="(max-width: 768px) 90vw, 512px"
+                    className="object-cover rounded-2xl"
+                    priority
                   />
                 </div>
               </div>
             </motion.div>
 
             {/* Декоративные элементы */}
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="absolute -top-5 -right-5 w-20 h-20 text-4xl"
-            >
-              ✨
-            </motion.div>
-            <motion.div
-              animate={{ rotate: -360 }}
-              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-              className="absolute -bottom-5 -left-5 w-20 h-20 text-4xl"
-            >
-              💖
-            </motion.div>
+            <div className="absolute -top-5 -right-5 w-20 h-20 bg-primary/20 rounded-full blur-2xl" />
+            <div className="absolute -bottom-5 -left-5 w-20 h-20 bg-secondary/20 rounded-full blur-2xl" />
           </motion.div>
         </div>
       </div>

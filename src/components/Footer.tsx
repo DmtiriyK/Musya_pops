@@ -2,8 +2,10 @@
 
 import { motion } from 'framer-motion';
 import { FaGithub, FaHeart } from 'react-icons/fa';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Footer() {
+  const { t } = useLanguage();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -31,7 +33,7 @@ export default function Footer() {
               Мяу!
             </h3>
             <p className="text-foreground/60">
-              Спасибо, что заглянули познакомиться с нашей звездой
+              {t.footer.thanks}
             </p>
           </div>
 
@@ -41,14 +43,14 @@ export default function Footer() {
           {/* Нижняя часть */}
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-foreground/60">
             <div className="flex items-center gap-2">
-              <span>Сделано с</span>
+              <span>{t.footer.madeWith}</span>
               <motion.div
                 animate={{ scale: [1, 1.2, 1] }}
                 transition={{ duration: 1, repeat: Infinity }}
               >
                 <FaHeart className="text-primary" />
               </motion.div>
-              <span>для лучшей кошки</span>
+              <span>{t.footer.forTheBest}</span>
             </div>
 
             <div className="flex items-center gap-6">

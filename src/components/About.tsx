@@ -3,9 +3,11 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { fadeIn, slideFromLeft, slideFromRight } from '@/lib/animations';
-import { CAT_INFO } from '@/lib/constants';
+import Image from 'next/image';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function About() {
+  const { t, lang } = useLanguage();
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.2,
@@ -20,7 +22,7 @@ export default function About() {
           animate={inView ? "visible" : "hidden"}
           className="text-5xl md:text-6xl font-bold text-center mb-16 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
         >
-          О нашей звезде
+          {t.about.sectionTitle}
         </motion.h2>
 
         <div className="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
@@ -32,10 +34,12 @@ export default function About() {
             className="relative"
           >
             <div className="relative aspect-square rounded-3xl overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/20">
-              <img
+              <Image
                 src="/images/gallery/WhatsApp Image 2026-02-16 at 15.05.19.jpeg"
                 alt="О кошке"
-                className="w-full h-full object-cover"
+                fill
+                sizes="(max-width: 768px) 90vw, 50vw"
+                className="object-cover"
               />
             </div>
             {/* Декоративный элемент */}
@@ -50,12 +54,12 @@ export default function About() {
             className="space-y-6"
           >
             <div className="space-y-4">
-              <h3 className="text-3xl font-bold text-primary">Знакомьтесь, {CAT_INFO.name}!</h3>
+              <h3 className="text-3xl font-bold text-primary">{t.about.intro} {t.cat.name}!</h3>
               <p className="text-lg text-foreground/80 leading-relaxed">
-                {CAT_INFO.description}
+                {t.cat.description}
               </p>
               <p className="text-lg text-foreground/80 leading-relaxed">
-                Каждый день приносит новые приключения, смешные моменты и море позитива. От утреннего мяуканья до вечерних зумис — жизнь с этой кошкой никогда не бывает скучной!
+                {t.about.bio}
               </p>
             </div>
 
@@ -69,8 +73,8 @@ export default function About() {
               >
                 <span className="text-2xl">🎂</span>
                 <div>
-                  <p className="font-medium text-primary">Возраст</p>
-                  <p className="text-foreground/70">{CAT_INFO.age} лет</p>
+                  <p className="font-medium text-primary">{t.about.ageLabel}</p>
+                  <p className="text-foreground/70">{t.cat.age}</p>
                 </div>
               </motion.div>
 
@@ -82,8 +86,8 @@ export default function About() {
               >
                 <span className="text-2xl">🐾</span>
                 <div>
-                  <p className="font-medium text-secondary">Порода</p>
-                  <p className="text-foreground/70">{CAT_INFO.breed}</p>
+                  <p className="font-medium text-secondary">{t.about.breedLabel}</p>
+                  <p className="text-foreground/70">{t.cat.breed}</p>
                 </div>
               </motion.div>
 
@@ -95,8 +99,8 @@ export default function About() {
               >
                 <span className="text-2xl">✨</span>
                 <div>
-                  <p className="font-medium text-accent">Характер</p>
-                  <p className="text-foreground/70">{CAT_INFO.personality.join(', ')}</p>
+                  <p className="font-medium text-accent">{lang === 'en' ? 'Character' : 'Характер'}</p>
+                  <p className="text-foreground/70">{t.cat.personality.join(', ')}</p>
                 </div>
               </motion.div>
             </div>

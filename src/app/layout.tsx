@@ -4,6 +4,8 @@ import "./globals.css";
 import { InteractiveProvider } from "@/components/interactive/InteractiveProvider";
 import InteractiveWrapper from "@/components/interactive/InteractiveWrapper";
 import InteractiveToggle from "@/components/ui/InteractiveToggle";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import LanguageToggle from "@/components/ui/LanguageToggle";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,11 +32,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <InteractiveProvider>
-          <InteractiveWrapper />
-          <InteractiveToggle />
-          {children}
-        </InteractiveProvider>
+        <LanguageProvider>
+          <InteractiveProvider>
+            <LanguageToggle />
+            <InteractiveWrapper />
+            <InteractiveToggle />
+            {children}
+          </InteractiveProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

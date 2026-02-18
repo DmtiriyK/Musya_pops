@@ -3,17 +3,12 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { fadeIn, slideFromLeft, slideFromRight } from '@/lib/animations';
+import { useLanguage } from '@/contexts/LanguageContext';
 
-const mockTimelineEvents = [
-  { id: '1', date: '2024', title: 'Первый день дома', description: 'Началась новая жизнь, полная приключений', emoji: '🏠' },
-  { id: '2', date: '2024', title: 'Первая игрушка', description: 'Любовь с первого взгляда к мячику', emoji: '🎾' },
-  { id: '3', date: '2024', title: 'Освоение территории', description: 'Каждый уголок квартиры исследован', emoji: '🗺️' },
-  { id: '4', date: '2025', title: 'Первый ветеринар', description: 'Храбро перенесли осмотр', emoji: '🏥' },
-  { id: '5', date: '2025', title: 'Мастер зумис', description: 'Покорили скорость света в коридоре', emoji: '⚡' },
-  { id: '6', date: '2026', title: 'Сегодня', description: 'Продолжаем радовать каждый день', emoji: '⭐' },
-];
+const timelineEmojis = ['🏠', '🎾', '🗺️', '🏥', '⚡', '⭐'];
 
 export default function Timeline() {
+  const { t } = useLanguage();
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -28,7 +23,7 @@ export default function Timeline() {
           animate={inView ? "visible" : "hidden"}
           className="text-5xl md:text-6xl font-bold text-center mb-16 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
         >
-          Путь к звёздности
+          {t.timeline.sectionTitle}
         </motion.h2>
 
         <div className="max-w-4xl mx-auto relative">
@@ -36,12 +31,13 @@ export default function Timeline() {
           <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-primary via-secondary to-accent" />
 
           <div className="space-y-12">
-            {mockTimelineEvents.map((event, index) => {
+            {t.timeline.events.map((event, index) => {
               const isLeft = index % 2 === 0;
+              const emoji = timelineEmojis[index];
               
               return (
                 <motion.div
-                  key={event.id}
+                  key={index}
                   variants={isLeft ? slideFromLeft : slideFromRight}
                   initial="hidden"
                   animate={inView ? "visible" : "hidden"}
@@ -66,7 +62,7 @@ export default function Timeline() {
                       className="p-6 bg-gradient-to-br from-background to-primary/10 rounded-2xl shadow-lg border border-primary/20"
                     >
                       <div className="flex items-start gap-4">
-                        <span className="text-4xl">{event.emoji}</span>
+                        <span className="text-4xl">{emoji}</span>
                         <div className="flex-1">
                           <p className="text-sm text-primary font-medium mb-1">{event.date}</p>
                           <h3 className="text-xl font-bold text-foreground mb-2">{event.title}</h3>

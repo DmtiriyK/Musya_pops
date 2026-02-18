@@ -50,12 +50,6 @@ export const scaleIn: Variants = {
   }
 };
 
-// Rotate анимация для кошки при скролле
-export const rotateOnScroll = (scrollProgress: number) => ({
-  rotate: scrollProgress * 360 * 2, // 2 полных оборота
-  transition: { duration: 0 }
-});
-
 // Bounce анимация
 export const bounce = {
   y: [0, -20, 0],
