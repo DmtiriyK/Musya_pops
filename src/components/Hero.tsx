@@ -1,12 +1,51 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { fadeIn, slideUp, scaleIn } from '@/lib/animations';
 import Image from 'next/image';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Hero() {
   const { t } = useLanguage();
+
+  // Typewriter для breed
+  const [displayedBreed, setDisplayedBreed] = useState('');
+  const [breedDone, setBreedDone] = useState(false);
+
+  useEffect(() => {
+    setDisplayedBreed('');
+    setBreedDone(false);
+    let i = 0;
+    const timer = setInterval(() => {
+      i++;
+      setDisplayedBreed(t.cat.breed.slice(0, i));
+      if (i >= t.cat.breed.length) {
+        clearInterval(timer);
+        setBreedDone(true);
+      }
+    }, 38);
+    return () => clearInterval(timer);
+  }, [t.cat.breed]);
+
+  // Тройной клик на имя
+  const [clickCount, setClickCount] = useState(0);
+  const [showHearts, setShowHearts] = useState(false);
+  const clickTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  const handleNameClick = () => {
+    const next = clickCount + 1;
+    setClickCount(next);
+    clearTimeout(clickTimerRef.current);
+    if (next >= 3) {
+      setClickCount(0);
+      setShowHearts(true);
+      setTimeout(() => setShowHearts(false), 2200);
+    } else {
+      clickTimerRef.current = setTimeout(() => setClickCount(0), 1000);
+    }
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20">
       {/* Фоновые декоративные элементы */}
@@ -40,9 +79,37 @@ export default function Hero() {
               initial="hidden"
               animate="visible"
               transition={{ delay: 0.2 }}
-              className="text-6xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent"
+              className="relative inline-block text-6xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent cursor-pointer select-none"
+              onClick={handleNameClick}
             >
               {t.cat.name}
+              <AnimatePresence>
+                {showHearts && (
+                  <>
+                    {[...Array(6)].map((_, i) => (
+                      <motion.span
+                        key={i}
+                        className="absolute text-2xl pointer-events-none"
+                        style={{ left: `${8 + i * 15}%`, top: '-10%' }}
+                        initial={{ opacity: 1, y: 0 }}
+                        animate={{ opacity: 0, y: -55 }}
+                        transition={{ duration: 1.4, delay: i * 0.08 }}
+                      >
+                        💗
+                      </motion.span>
+                    ))}
+                    <motion.div
+                      className="absolute top-full left-1/2 -translate-x-1/2 mt-3 text-sm bg-white/90 dark:bg-zinc-900/90 text-foreground px-4 py-2 rounded-xl shadow-lg border border-primary/20 font-normal whitespace-nowrap"
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+                    >
+                      мур 🐾
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
             </motion.h1>
             
             <motion.p
@@ -52,7 +119,7 @@ export default function Hero() {
               transition={{ delay: 0.4 }}
               className="text-2xl md:text-3xl text-foreground/80 mb-4"
             >
-              {t.cat.breed}
+              {displayedBreed}{!breedDone && <span className="opacity-50 animate-pulse">|</span>}
             </motion.p>
             
             <motion.p

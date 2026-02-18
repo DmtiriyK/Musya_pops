@@ -1,12 +1,23 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaGithub, FaHeart } from 'react-icons/fa';
 import { useLanguage } from '@/contexts/LanguageContext';
 
+const PHRASES = {
+  ru: ['Мяу.', 'Иди корми.', 'Мне всё равно.', '…мур', 'Чего смотришь?', 'Ну и ладно.'],
+  en: ['Meow.', 'Go feed me.', 'I could not care less.', '…purr', "What're you looking at?", 'Fine then.'],
+};
+
 export default function Footer() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const currentYear = new Date().getFullYear();
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const phrases = PHRASES[lang];
+  const greeting = phrases[phraseIdx % phrases.length];
+
+  const handleGreetingClick = () => setPhraseIdx(i => i + 1);
 
   return (
     <footer className="relative py-12 bg-gradient-to-b from-primary/10 to-background overflow-hidden">
@@ -29,9 +40,16 @@ export default function Footer() {
             >
               🐱
             </motion.div>
-            <h3 className="text-3xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent mb-2">
-              Мяу!
-            </h3>
+            <motion.h3
+              key={phraseIdx}
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-3xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent mb-2 cursor-pointer select-none"
+              onClick={handleGreetingClick}
+              title={lang === 'ru' ? 'Нажми ещё раз' : 'Click again'}
+            >
+              {greeting}
+            </motion.h3>
             <p className="text-foreground/60">
               {t.footer.thanks}
             </p>
