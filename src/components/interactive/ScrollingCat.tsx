@@ -6,6 +6,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 export default function ScrollingCat() {
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [0, 1, 1, 0]);
+  const rotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
 
   return (
     <motion.div
@@ -13,8 +14,7 @@ export default function ScrollingCat() {
       style={{ opacity }}
     >
       <motion.div
-        animate={{ y: [0, -6, 0] }}
-        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+        style={{ rotate }}
         className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden shadow-lg border-2 border-primary/30"
       >
         <Image

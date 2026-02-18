@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion, useScroll } from 'framer-motion';
 import { useScrollPosition } from '@/hooks';
 
@@ -25,17 +26,17 @@ export default function ScrollProgress() {
           }}
         >
           <motion.div
-            animate={{
-              y: [0, -5, 0],
-            }}
-            transition={{
-              duration: 0.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="text-3xl -mt-1"
+            animate={{ y: [0, -5, 0] }}
+            transition={{ duration: 0.5, repeat: Infinity, ease: 'easeInOut' }}
+            className="w-8 h-8 rounded-full overflow-hidden border border-primary/40 shadow -mt-3"
           >
-            🐈
+            <Image
+              src="/images/musya/Scroll.png"
+              alt="Муся"
+              width={32}
+              height={32}
+              className="w-full h-full object-cover"
+            />
           </motion.div>
         </motion.div>
       )}
