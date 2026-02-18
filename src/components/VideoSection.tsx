@@ -12,7 +12,6 @@ const videoSrcs = [
   '/videos/WhatsApp Video 2026-02-16 at 15.13.09.mp4',
   '/videos/WhatsApp Video 2026-02-16 at 15.13.11.mp4',
   '/videos/WhatsApp Video 2026-02-16 at 15.13.07.mp4',
-  '/videos/WhatsApp Video 2026-02-16 at 15.13.15.mp4',
 ];
 
 export default function VideoSection() {

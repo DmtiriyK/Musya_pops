@@ -89,7 +89,6 @@ const content: Record<Lang, Content> = {
         { title: 'Массаж', description: 'Профессиональный. Сертификатов нет, но качество есть.' },
         { title: 'Игривое настроение', description: 'Бывает. Редко, но метко.' },
         { title: 'Исследует', description: 'Каждый угол по третьему разу.' },
-        { title: 'Мурчит', description: 'Как всегда. За просто так.' },
       ],
     },
     achievements: {
@@ -193,7 +192,6 @@ const content: Record<Lang, Content> = {
         { title: 'Massage session', description: 'Professional grade. No certificate, but the quality speaks for itself.' },
         { title: 'Playful mood', description: 'It happens. Rare, but precise.' },
         { title: 'Exploring', description: 'Every corner, for the third time.' },
-        { title: 'Purring', description: 'As always. For no particular reason.' },
       ],
     },
     achievements: {
